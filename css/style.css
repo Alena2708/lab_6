@@ -1,0 +1,15 @@
+.time{
+    color : darkred;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+button.btn {
+    color: #00CED1;
+    font-weight: 700;
+    padding: .5em 2em;
+    border: double;
+    transition: 0.5s;
+} 
+
+button.btn:hover { background:#87CEFA}

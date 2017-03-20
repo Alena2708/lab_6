@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="rus">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bootstrap+Promise+Knockout</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.1.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script type='text/javascript' src='js/knockout-3.4.2.js'></script>
+  </head>
+  
+  <body>         
+           
+              <h1>Bootstrap + Promise + Knockout</h1>    
+              <h2>jQuary</h2>
+              <div id="time_jq" class="time"></div>
+              <button id="button_jq" class="btn">Отправить запрос</button>
+              <p id="query_jq"></p>
+                     
+         
+              <h2>Knockout</h2>
+              <div data-bind="text: time_ko" class="time"></div>
+              <button data-bind="click: button_ko" class="btn">Отправить запрос</button>
+              <p data-bind="text: query_ko"></p>
+            </div>
+          
+          
+  <script type="text/javascript">
+      function Time() {
+          var time = new Date(Date.now());
+          formatted = "Текущее время: " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+          return formatted;
+      }
+      
+      //jquery
+      setInterval(function() {
+            $("#time_jq").text(Time())
+        }, 1000);
+      
+      $("#button_jq").click(function() {
+            $("#query_jq").text("Ожидание...");
+            var deferred = $.Deferred();
+            setTimeout(function() {
+                deferred.resolve(Math.floor(Math.random() * 100));
+            }, Math.floor(Math.random() * 400))
+            
+            var promise = deferred.promise();
+            promise.done(function(result) {
+                $("#query_jq").text(result);
+            });
+        });
+      
+      //-----------------------------------------------------------------------------------------------
+      //knockout
+      var ViewModel = function() {
+          this.time_ko = ko.observable();
+          this.query_ko = ko.observable();
+      };
+      
+      var viewModel = new ViewModel();  
+      
+      setInterval(function() {
+          viewModel.time_ko(Time());
+      }, 1000);
+      
+      viewModel.button_ko = function() {
+          viewModel.query_ko("Ожидание...");
+          var deferred = $.Deferred();
+          setTimeout(function() {
+              deferred.resolve(Math.floor(Math.random() * 100));
+          }, Math.floor(Math.random() * 400))
+                        
+          var promise = deferred.promise();
+          promise.done(function(result) {
+              viewModel.query_ko(result);
+          }); 
+      }      
+      ko.applyBindings(viewModel);
+  </script>
+  </body>
+</html>
